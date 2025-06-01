@@ -18,3 +18,48 @@ model User {
   email String  @unique
   name  String?
 }
+
+model Candidate {
+  id          String       @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String       @unique
+  address     String?
+  available   Boolean      @default(true)
+  resumeUrl   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  education   Education[]
+  experience  Experience[]
+
+  @@map("candidates")
+}
+
+model Education {
+  id          String    @id @default(uuid())
+  institution String
+  title       String
+  degree      String
+  years       Int?
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("education")
+}
+
+model Experience {
+  id          String    @id @default(uuid())
+  role        String
+  company     String
+  industry    String
+  startDate   DateTime
+  endDate     DateTime?
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("experience")
+}
